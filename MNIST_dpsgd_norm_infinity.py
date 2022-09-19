@@ -25,7 +25,7 @@ tf.flags.DEFINE_float('learning_rate', .3, 'Learning rate for training')
 tf.flags.DEFINE_integer('batch_size', 10000, 'Batch size')
 tf.flags.DEFINE_integer('epochs', 200, 'Number of epochs')
 tf.flags.DEFINE_float('norm_clip', 1/100, 'clip l2 of the gradient')
-tf.flags.DEFINE_float('eps0', 1.5, 'central privacy level epsilon')
+tf.flags.DEFINE_float('eps0', 1.5, 'local privacy level epsilon')
 tf.flags.DEFINE_float('delta', 1e-5, 'delat')
 FLAGS = tf.flags.FLAGS
 num_samples = 60000
@@ -198,8 +198,8 @@ optimizer = tf.keras.optimizers.SGD(learning_rate=FLAGS.learning_rate)
 criterion = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 train_acc_metric = tf.keras.metrics.SparseCategoricalAccuracy()
 test_acc_metric = tf.keras.metrics.SparseCategoricalAccuracy()
-###########################################################################  
-filename = 'data_'+'eps_mnist_l3_10'    
+############################################################################  
+filename = 'data_'+'eps_mnist'    
 for epoch in range(1, FLAGS.epochs+1):
     total_eps[epoch-1] = compute_privacy(num_samples,FLAGS.batch_size,epst,epoch,FLAGS.delta)
     train(epoch, train_data)
