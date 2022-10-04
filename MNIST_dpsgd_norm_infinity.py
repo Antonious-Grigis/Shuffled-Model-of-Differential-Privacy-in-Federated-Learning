@@ -15,6 +15,8 @@ import scipy.io as io
 import os
 import pickle
 
+import privacy_computation as pc
+
 
 mirrored_strategy = tf.distribute.MirroredStrategy()
 
@@ -201,7 +203,9 @@ test_acc_metric = tf.keras.metrics.SparseCategoricalAccuracy()
 ############################################################################  
 filename = 'data_'+'eps_mnist'    
 for epoch in range(1, FLAGS.epochs+1):
-    total_eps[epoch-1] = compute_privacy(num_samples,FLAGS.batch_size,epst,epoch,FLAGS.delta)
+    q = float(FLAGS.batch_size)/num_samples
+    T = int(epoch/q)
+    total_eps[epoch-1] = pc.optimize_RDP_To_DP(FLAGS.delta,0.01,FLAGS.eps0,num_samples, q, T, pc.RDP_comp)
     train(epoch, train_data)
     test(epoch, test_data)
     data = {
